@@ -33,5 +33,8 @@ document.getElementById('upload-form').addEventListener('submit', async (e) => {
     } catch (error) {
         console.error(error);
         resultDiv.innerHTML = `Error: ${error.stack}`;
-    }
+document.getElementById('load-sample').addEventListener('click', async () => {
+    const response = await fetch('sample_marp.md');
+    const content = await response.text();
+    document.getElementById('marp-input').value = content;
 });
