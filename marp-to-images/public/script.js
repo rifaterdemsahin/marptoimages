@@ -3,8 +3,9 @@ document.getElementById('upload-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    const fileInput = document.getElementById('marp-file');
-    formData.append('marp-file', fileInput.files[0]);
+    const marpContent = document.getElementById('marp-input').value;
+    const blob = new Blob([marpContent], { type: 'text/markdown' });
+    formData.append('marp-file', blob, 'presentation.md');
 
     const resultDiv = document.getElementById('result');
     resultDiv.innerHTML = 'Converting...';
