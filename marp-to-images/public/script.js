@@ -31,6 +31,7 @@ document.getElementById('upload-form').addEventListener('submit', async (e) => {
             resultDiv.innerHTML = `Error: ${error}`;
         }
     } catch (error) {
-        resultDiv.innerHTML = `Error: ${error.message}`;
+        console.error(error);
+        resultDiv.innerHTML = `Error: ${error.stack}`;
     }
 });
