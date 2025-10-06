@@ -1,0 +1,5 @@
+marp-to-images/node_modules/.package-lock.json
+marp-to-images/node_modules/
+marp-to-images/dist/
+marp-to-images/.DS_Store
+marp-to-images/node_modules/.bin
