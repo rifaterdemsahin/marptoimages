@@ -19,6 +19,38 @@ function debugLog(message) {
 }
 
 /**
+ * Check server health on page load
+ */
+async function checkServerHealth() {
+    const statusDiv = document.getElementById('server-status');
+    debugLog('Checking server health...');
+    
+    try {
+        const response = await fetch('/health');
+        if (response.ok) {
+            const data = await response.json();
+            statusDiv.className = 'alert alert-success';
+            statusDiv.innerHTML = `<strong>✅ Server Online</strong> - Version 1.0.1 - Ready to convert!`;
+            debugLog(`Server health check: OK (${data.timestamp})`);
+        } else {
+            throw new Error(`Server returned ${response.status}`);
+        }
+    } catch (error) {
+        statusDiv.className = 'alert alert-danger';
+        statusDiv.innerHTML = `
+            <strong>❌ Server Offline!</strong> 
+            <br>The server is not running. Please start it with:
+            <br><code>cd marp-to-images && npm start</code>
+            <br>Then refresh this page.
+        `;
+        debugLog(`Server health check FAILED: ${error.message}`);
+    }
+}
+
+// Check server health when page loads
+window.addEventListener('DOMContentLoaded', checkServerHealth);
+
+/**
  * Toggle debug panel visibility
  */
 document.getElementById('toggle-debug').addEventListener('click', () => {
@@ -29,6 +61,10 @@ document.getElementById('toggle-debug').addEventListener('click', () => {
         debugPanel.style.display = 'block';
         toggleBtn.textContent = 'Hide Debug';
         debugLog('Debug panel opened');
+        debugLog(`Page version: 1.0.1`);
+        debugLog(`Current URL: ${window.location.href}`);
+        // Re-check server health
+        checkServerHealth();
     } else {
         debugPanel.style.display = 'none';
         toggleBtn.textContent = 'Show Debug';

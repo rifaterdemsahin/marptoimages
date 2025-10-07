@@ -14,8 +14,14 @@ const port = process.env.PORT || 3000;
  */
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-// Serve static files from the 'public' directory
-app.use(express.static('public'));
+// Serve static files from the 'public' directory with no-cache headers
+app.use(express.static('public', {
+    setHeaders: (res, path) => {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+    }
+}));
 
 /**
  * Custom file filter for multer to only accept markdown files
@@ -100,10 +106,15 @@ app.post('/convert', upload.single('marp-file'), async (req, res) => {
         console.log('[DEBUG] Converting Marp file:', inputPath);
         console.log('[DEBUG] Output directory:', outputDir);
         
+        // Marp CLI needs the output to end with a filename pattern
+        // Using {name} will be replaced with the input filename
+        const outputPattern = path.join(outputDir, '{name}');
+        console.log('[DEBUG] Output pattern:', outputPattern);
+        
         await marpCli([
             inputPath,
             '--images', 'png',
-            '-o', outputDir
+            '-o', outputPattern
         ]);
 
         console.log('[DEBUG] Marp CLI conversion completed');
