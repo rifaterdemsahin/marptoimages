@@ -2,14 +2,19 @@
   "version": 2,
   "builds": [
     {
-      "src": "marp-to-images/package.json",
+      "src": "marp-to-images/index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "marp-to-images/index.js"
+      "dest": "/marp-to-images/index.js"
     }
-  ]
+  ],
+  "functions": {
+    "marp-to-images/index.js": {
+      "maxDuration": 30
+    }
+  }
 }

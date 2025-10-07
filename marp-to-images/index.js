@@ -249,8 +249,23 @@ app.get('/health', (req, res) => {
 });
 
 /**
- * Start the Express server
+ * Root route - serve index.html
+ * @route GET /
  */
-app.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`);
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+/**
+ * Start the Express server (not used in Vercel serverless)
+ */
+if (!isVercel) {
+    app.listen(port, () => {
+        console.log(`Server listening at http://localhost:${port}`);
+    });
+}
+
+/**
+ * Export the Express app for Vercel serverless
+ */
+module.exports = app;
