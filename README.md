@@ -5,6 +5,14 @@ Convert Markdown Presentations (Marp format) to PNG images instantly. A free, ea
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![Express](https://img.shields.io/badge/Express-5.1.0-lightgrey.svg)](https://expressjs.com/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub-Actions-2088FF?logo=github-actions&logoColor=white)](https://github.com/rifaterdemsahin/marptoimages/actions)
+
+## 🌐 Live Demo & Links
+
+- **🚀 Live on Vercel:** [https://marptoimages-6s009rwd8-rifaterdemsahins-projects.vercel.app/](https://marptoimages-6s009rwd8-rifaterdemsahins-projects.vercel.app/)
+- **📦 GitHub Repository:** [https://github.com/rifaterdemsahin/marptoimages](https://github.com/rifaterdemsahin/marptoimages)
+- **🔄 GitHub Actions:** [https://github.com/rifaterdemsahin/marptoimages/actions](https://github.com/rifaterdemsahin/marptoimages/actions)
+- **📝 Latest Release:** [v1.0.1](https://github.com/rifaterdemsahin/marptoimages/releases)
 
 ## 🚀 Features
 
