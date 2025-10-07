@@ -97,15 +97,21 @@ app.post('/convert', upload.single('marp-file'), async (req, res) => {
         fs.mkdirSync(outputDir, { recursive: true });
 
         // Convert Marp markdown to images
+        console.log('[DEBUG] Converting Marp file:', inputPath);
+        console.log('[DEBUG] Output directory:', outputDir);
+        
         await marpCli([
             inputPath,
             '--images', 'png',
             '-o', outputDir
         ]);
 
+        console.log('[DEBUG] Marp CLI conversion completed');
+
         // Check if conversion produced any images
         // Marp CLI creates files without .png extension (e.g., output.001, output.002)
         const allFiles = fs.readdirSync(outputDir);
+        console.log('[DEBUG] Files in output directory:', allFiles);
         const imageFiles = allFiles.filter(file => {
             // Check if file is a PNG image (files may not have .png extension)
             const filePath = path.join(outputDir, file);
@@ -122,14 +128,17 @@ app.post('/convert', upload.single('marp-file'), async (req, res) => {
         }
 
         // Rename files to have .png extension for clarity
+        console.log('[DEBUG] Renaming files to add .png extension...');
         const renamedFiles = [];
         imageFiles.forEach((file, index) => {
             const oldPath = path.join(outputDir, file);
             const newName = `slide-${String(index + 1).padStart(3, '0')}.png`;
             const newPath = path.join(outputDir, newName);
+            console.log(`[DEBUG] Renaming: ${file} -> ${newName}`);
             fs.renameSync(oldPath, newPath);
             renamedFiles.push(newName);
         });
+        console.log('[DEBUG] Renamed files:', renamedFiles);
 
         // Create ZIP archive of images
         const zipPath = path.join(outputDir, 'presentation.zip');
