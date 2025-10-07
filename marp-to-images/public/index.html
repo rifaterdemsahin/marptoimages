@@ -27,15 +27,36 @@
 <body>
     <div class="container">
         <h1 class="my-4">Marp to Images</h1>
+        
+        <div class="alert alert-info" role="alert">
+            <strong>📖 Need help?</strong> Check the 
+            <a href="https://github.com/rifaterdemsahin/marptoimages/blob/main/Semblance/TROUBLESHOOTING.md" target="_blank" class="alert-link">Troubleshooting Guide</a>
+            for common issues and solutions.
+        </div>
+        
         <form id="upload-form" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="marp-input" class="form-label">Marp Content</label>
-                <textarea class="form-control" id="marp-input" name="marp-input" rows="10"></textarea>
+                <textarea class="form-control" id="marp-input" name="marp-input" rows="10" placeholder="Paste your Marp markdown here or click 'Load Sample'"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Convert</button>
             <button type="button" id="load-sample" class="btn btn-secondary">Load Sample</button>
+            <button type="button" id="toggle-debug" class="btn btn-outline-info">Show Debug</button>
         </form>
+        
         <div id="result" class="mt-4"></div>
+        
+        <div id="debug-panel" class="mt-4" style="display: none;">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <strong>Debug Console</strong>
+                    <button type="button" id="clear-debug" class="btn btn-sm btn-outline-light float-end">Clear</button>
+                </div>
+                <div class="card-body bg-light">
+                    <pre id="debug-output" class="mb-0" style="max-height: 300px; overflow-y: auto; font-size: 12px;"></pre>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

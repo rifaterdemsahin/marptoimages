@@ -5,6 +5,45 @@
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 /**
+ * Debug logging function
+ * @param {string} message - The debug message to log
+ */
+function debugLog(message) {
+    const timestamp = new Date().toLocaleTimeString();
+    const debugOutput = document.getElementById('debug-output');
+    if (debugOutput) {
+        debugOutput.textContent += `[${timestamp}] ${message}\n`;
+        debugOutput.scrollTop = debugOutput.scrollHeight;
+    }
+    console.log(`[DEBUG] ${message}`);
+}
+
+/**
+ * Toggle debug panel visibility
+ */
+document.getElementById('toggle-debug').addEventListener('click', () => {
+    const debugPanel = document.getElementById('debug-panel');
+    const toggleBtn = document.getElementById('toggle-debug');
+    
+    if (debugPanel.style.display === 'none') {
+        debugPanel.style.display = 'block';
+        toggleBtn.textContent = 'Hide Debug';
+        debugLog('Debug panel opened');
+    } else {
+        debugPanel.style.display = 'none';
+        toggleBtn.textContent = 'Show Debug';
+    }
+});
+
+/**
+ * Clear debug output
+ */
+document.getElementById('clear-debug').addEventListener('click', () => {
+    document.getElementById('debug-output').textContent = '';
+    debugLog('Debug output cleared');
+});
+
+/**
  * Validates the Marp content before submission
  * @param {string} content - The Marp markdown content
  * @returns {Object} Validation result with isValid flag and message
@@ -79,13 +118,20 @@ function showSuccess(resultDiv, blob) {
  */
 document.getElementById('upload-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+    
+    debugLog('=== Conversion Started ===');
 
     const marpContent = document.getElementById('marp-input').value;
     const resultDiv = document.getElementById('result');
     
+    debugLog(`Content length: ${marpContent.length} characters`);
+    
     // Validate content
     const validation = validateContent(marpContent);
+    debugLog(`Validation result: ${validation.isValid ? 'PASS' : 'FAIL'}`);
+    
     if (!validation.isValid) {
+        debugLog(`Validation error: ${validation.message}`);
         showError(resultDiv, validation.message);
         return;
     }
@@ -93,10 +139,13 @@ document.getElementById('upload-form').addEventListener('submit', async (e) => {
     // Create form data
     const formData = new FormData();
     const blob = new Blob([marpContent], { type: 'text/markdown' });
+    debugLog(`Created blob: ${blob.size} bytes, type: ${blob.type}`);
     formData.append('marp-file', blob, 'presentation.md');
+    debugLog('Form data prepared');
 
     // Show loading indicator
     showLoading(resultDiv);
+    debugLog('Sending request to /convert...');
 
     try {
         const response = await fetch('/convert', {
@@ -104,16 +153,24 @@ document.getElementById('upload-form').addEventListener('submit', async (e) => {
             body: formData
         });
 
+        debugLog(`Response status: ${response.status} ${response.statusText}`);
+
         if (response.ok) {
             const blob = await response.blob();
+            debugLog(`Received ZIP file: ${blob.size} bytes`);
+            debugLog('=== Conversion Successful ===');
             showSuccess(resultDiv, blob);
         } else {
             const errorText = await response.text();
+            debugLog(`Server error: ${errorText}`);
             const errorMessage = errorText || 'Conversion failed. Please check your Marp content and try again.';
+            debugLog('=== Conversion Failed ===');
             showError(resultDiv, errorMessage);
         }
     } catch (error) {
         console.error('Conversion error:', error);
+        debugLog(`Network error: ${error.message}`);
+        debugLog('=== Conversion Failed (Network Error) ===');
         showError(resultDiv, 'Network error occurred. Please check your connection and try again.');
     }
 });
