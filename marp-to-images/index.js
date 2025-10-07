@@ -42,10 +42,23 @@ const fileFilter = (req, file, cb) => {
 };
 
 /**
+ * Detect if running on Vercel (serverless environment)
+ */
+const isVercel = process.env.VERCEL === '1';
+
+/**
+ * Set base directories based on environment
+ * Vercel: Use /tmp (only writable directory)
+ * Local: Use current directory
+ */
+const UPLOADS_DIR = isVercel ? '/tmp/uploads' : 'uploads';
+const OUTPUT_DIR = isVercel ? '/tmp/output' : 'output';
+
+/**
  * Configure multer for file uploads with size and type restrictions
  */
 const upload = multer({ 
-    dest: 'uploads/',
+    dest: UPLOADS_DIR,
     limits: {
         fileSize: MAX_FILE_SIZE
     },
@@ -56,7 +69,7 @@ const upload = multer({
  * Create required directories if they don't exist
  */
 const ensureDirectories = () => {
-    const directories = ['uploads', 'output'];
+    const directories = [UPLOADS_DIR, OUTPUT_DIR];
     directories.forEach(dir => {
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
@@ -97,7 +110,7 @@ app.post('/convert', upload.single('marp-file'), async (req, res) => {
         }
 
         inputPath = req.file.path;
-        outputDir = path.join('output', `${Date.now()}`);
+        outputDir = path.join(OUTPUT_DIR, `${Date.now()}`);
         
         // Create output directory
         fs.mkdirSync(outputDir, { recursive: true });
