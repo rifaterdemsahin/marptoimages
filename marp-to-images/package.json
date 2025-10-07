@@ -1,14 +1,36 @@
 {
   "name": "marp-to-images",
   "version": "1.0.0",
+  "description": "Convert Marp markdown presentations to PNG images",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "marp",
+    "markdown",
+    "presentation",
+    "converter",
+    "images",
+    "png",
+    "slides"
+  ],
   "author": "",
-  "license": "ISC",
-  "description": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rifaterdemsahin/marptoimages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rifaterdemsahin/marptoimages/issues"
+  },
+  "homepage": "https://github.com/rifaterdemsahin/marptoimages#readme",
   "dependencies": {
     "@marp-team/marp-cli": "^4.2.3",
     "archiver": "^7.0.1",
