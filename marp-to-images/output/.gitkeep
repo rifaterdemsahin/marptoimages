@@ -1,0 +1,4 @@
+# Output Directory
+
+This directory stores temporary converted images during processing.
+Files are automatically cleaned up after download.

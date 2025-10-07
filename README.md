@@ -218,9 +218,16 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 See [todo.md](todo.md) for the full list of planned improvements and features.
 
-## 🐛 Known Issues
+## 🐛 Troubleshooting
 
-- None currently reported
+Having issues? Check our [Troubleshooting Guide](TROUBLESHOOTING.md) for common problems and solutions.
+
+**Quick fixes:**
+- **Conversion fails:** Ensure your Marp content has proper frontmatter (`marp: true`)
+- **Server won't start:** Check if port 3000 is already in use
+- **No images generated:** Verify your markdown has slide separators (`---`)
+
+For detailed solutions, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
 ## 📄 License
 

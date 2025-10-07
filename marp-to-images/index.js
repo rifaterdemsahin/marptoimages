@@ -98,18 +98,38 @@ app.post('/convert', upload.single('marp-file'), async (req, res) => {
 
         // Convert Marp markdown to images
         await marpCli([
-            '--image', 'png',
-            '--input-dir', path.dirname(inputPath),
-            path.basename(inputPath),
-            '--output', outputDir
+            inputPath,
+            '--images', 'png',
+            '-o', outputDir
         ]);
 
         // Check if conversion produced any images
-        const imageFiles = fs.readdirSync(outputDir).filter(file => file.endsWith('.png'));
+        // Marp CLI creates files without .png extension (e.g., output.001, output.002)
+        const allFiles = fs.readdirSync(outputDir);
+        const imageFiles = allFiles.filter(file => {
+            // Check if file is a PNG image (files may not have .png extension)
+            const filePath = path.join(outputDir, file);
+            try {
+                const stats = fs.statSync(filePath);
+                return stats.isFile() && file !== 'presentation.zip';
+            } catch {
+                return false;
+            }
+        });
         
         if (imageFiles.length === 0) {
             throw new Error('Conversion produced no images. Please check your Marp content.');
         }
+
+        // Rename files to have .png extension for clarity
+        const renamedFiles = [];
+        imageFiles.forEach((file, index) => {
+            const oldPath = path.join(outputDir, file);
+            const newName = `slide-${String(index + 1).padStart(3, '0')}.png`;
+            const newPath = path.join(outputDir, newName);
+            fs.renameSync(oldPath, newPath);
+            renamedFiles.push(newName);
+        });
 
         // Create ZIP archive of images
         const zipPath = path.join(outputDir, 'presentation.zip');
@@ -137,8 +157,8 @@ app.post('/convert', upload.single('marp-file'), async (req, res) => {
         // Pipe archive to output stream
         archive.pipe(output);
 
-        // Add all PNG files to archive
-        for (const file of imageFiles) {
+        // Add all renamed PNG files to archive
+        for (const file of renamedFiles) {
             archive.file(path.join(outputDir, file), { name: file });
         }
 
