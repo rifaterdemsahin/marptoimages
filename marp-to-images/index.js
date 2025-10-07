@@ -141,6 +141,7 @@ app.post('/convert', upload.single('marp-file'), async (req, res) => {
         console.log('[DEBUG] Renamed files:', renamedFiles);
 
         // Create ZIP archive of images
+        console.log('[DEBUG] Creating ZIP archive...');
         const zipPath = path.join(outputDir, 'presentation.zip');
         const output = fs.createWriteStream(zipPath);
         const archive = archiver('zip', {
@@ -149,6 +150,8 @@ app.post('/convert', upload.single('marp-file'), async (req, res) => {
 
         // Handle archive completion
         output.on('close', () => {
+            console.log('[DEBUG] Archive created. Total bytes:', archive.pointer());
+            console.log('[DEBUG] ZIP path:', zipPath);
             res.download(zipPath, 'presentation.zip', (err) => {
                 if (err) {
                     console.error('Download error:', err);
@@ -160,6 +163,7 @@ app.post('/convert', upload.single('marp-file'), async (req, res) => {
 
         // Handle archive errors
         archive.on('error', (err) => {
+            console.error('[DEBUG] Archive error:', err);
             throw err;
         });
 
@@ -167,11 +171,16 @@ app.post('/convert', upload.single('marp-file'), async (req, res) => {
         archive.pipe(output);
 
         // Add all renamed PNG files to archive
+        console.log('[DEBUG] Adding files to ZIP...');
         for (const file of renamedFiles) {
-            archive.file(path.join(outputDir, file), { name: file });
+            const filePath = path.join(outputDir, file);
+            console.log(`[DEBUG] Adding to ZIP: ${filePath}`);
+            archive.file(filePath, { name: file });
         }
 
+        console.log('[DEBUG] Finalizing archive...');
         await archive.finalize();
+        console.log('[DEBUG] Archive finalized successfully');
 
     } catch (error) {
         console.error('Conversion error:', error);
