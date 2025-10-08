@@ -245,7 +245,11 @@ app.use((error, req, res, next) => {
  * @route GET /health
  */
 app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+    res.status(200).json({ 
+        status: 'ok', 
+        version: '1.0.3',
+        timestamp: new Date().toISOString() 
+    });
 });
 
 /**

@@ -30,8 +30,8 @@ async function checkServerHealth() {
         if (response.ok) {
             const data = await response.json();
             statusDiv.className = 'alert alert-success';
-            statusDiv.innerHTML = `<strong>✅ Server Online</strong> - Version 1.0.1 - Ready to convert!`;
-            debugLog(`Server health check: OK (${data.timestamp})`);
+            statusDiv.innerHTML = `<strong>✅ Server Online</strong> - Version ${data.version || '1.0.3'} - Ready to convert!`;
+            debugLog(`Server health check: OK - Version ${data.version} (${data.timestamp})`);
         } else {
             throw new Error(`Server returned ${response.status}`);
         }

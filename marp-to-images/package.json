@@ -1,6 +1,6 @@
 {
   "name": "marp-to-images",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Convert Marp markdown presentations to PNG images",
   "main": "index.js",
   "scripts": {
